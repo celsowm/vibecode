@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { MaintenanceStatus, Role } from '../common/enums';
 import { AuthenticatedUser } from '../common/types';
@@ -53,7 +57,9 @@ export class MaintenanceService {
   }
 
   async updateStatus(id: string, status: MaintenanceStatus) {
-    const request = await this.prisma.maintenanceRequest.findUnique({ where: { id } });
+    const request = await this.prisma.maintenanceRequest.findUnique({
+      where: { id },
+    });
     if (!request) {
       throw new NotFoundException('Chamado não encontrado');
     }

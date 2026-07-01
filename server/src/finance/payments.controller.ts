@@ -12,7 +12,10 @@ export class PaymentsController {
   constructor(private paymentsService: PaymentsService) {}
 
   @Post()
-  register(@Body() dto: RegisterPaymentDto, @CurrentUser() user: AuthenticatedUser) {
+  register(
+    @Body() dto: RegisterPaymentDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
     return this.paymentsService.register(dto, user.userId);
   }
 

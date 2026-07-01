@@ -1,4 +1,9 @@
-import { ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { BookingStatus, Role } from '../common/enums';
 import { AuthenticatedUser } from '../common/types';
@@ -13,7 +18,9 @@ export class BookingsService {
     const endsAt = new Date(dto.endsAt);
 
     if (startsAt >= endsAt) {
-      throw new ConflictException('O horário de início deve ser anterior ao término');
+      throw new ConflictException(
+        'O horário de início deve ser anterior ao término',
+      );
     }
 
     return this.prisma.$transaction(async (tx) => {
@@ -27,7 +34,9 @@ export class BookingsService {
       });
 
       if (conflict) {
-        throw new ConflictException('Já existe uma reserva confirmada neste horário para esta área');
+        throw new ConflictException(
+          'Já existe uma reserva confirmada neste horário para esta área',
+        );
       }
 
       return tx.booking.create({
@@ -38,7 +47,10 @@ export class BookingsService {
           endsAt,
           notes: dto.notes,
         },
-        include: { commonArea: true, createdBy: { select: { id: true, name: true } } },
+        include: {
+          commonArea: true,
+          createdBy: { select: { id: true, name: true } },
+        },
       });
     });
   }
@@ -54,7 +66,10 @@ export class BookingsService {
     }
     return this.prisma.booking.findMany({
       where,
-      include: { commonArea: true, createdBy: { select: { id: true, name: true } } },
+      include: {
+        commonArea: true,
+        createdBy: { select: { id: true, name: true } },
+      },
       orderBy: { startsAt: 'asc' },
     });
   }
@@ -65,10 +80,15 @@ export class BookingsService {
       throw new NotFoundException('Reserva não encontrada');
     }
     const canCancel =
-      booking.createdById === user.userId || user.role === Role.ADMIN || user.role === Role.SINDICO;
+      booking.createdById === user.userId ||
+      user.role === Role.ADMIN ||
+      user.role === Role.SINDICO;
     if (!canCancel) {
       throw new ForbiddenException('Você não pode cancelar esta reserva');
     }
-    return this.prisma.booking.update({ where: { id }, data: { status: BookingStatus.CANCELED } });
+    return this.prisma.booking.update({
+      where: { id },
+      data: { status: BookingStatus.CANCELED },
+    });
   }
 }

@@ -110,10 +110,18 @@ export function UnitsListPage() {
                   </Box>
                 </TableCell>
                 <TableCell align="right">
-                  <IconButton onClick={() => setResidentDialogUnitId(unit.id)} title="Vincular morador">
+                  <IconButton
+                    onClick={() => setResidentDialogUnitId(unit.id)}
+                    title="Vincular morador"
+                    aria-label={`Vincular morador ${unit.identifier}`}
+                  >
                     <PersonAddIcon fontSize="small" />
                   </IconButton>
-                  <IconButton onClick={() => deleteUnitMutation.mutate(unit.id)} title="Excluir unidade">
+                  <IconButton
+                    onClick={() => deleteUnitMutation.mutate(unit.id)}
+                    title="Excluir unidade"
+                    aria-label={`Excluir unidade ${unit.identifier}`}
+                  >
                     <DeleteIcon fontSize="small" />
                   </IconButton>
                 </TableCell>

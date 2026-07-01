@@ -99,7 +99,10 @@ export function BookingsPage() {
                 <TableCell align="right">
                   {booking.status === 'CONFIRMED' &&
                     (booking.createdById === user?.id || user?.role !== 'MORADOR') && (
-                      <IconButton onClick={() => cancelBookingMutation.mutate(booking.id)}>
+                      <IconButton
+                        onClick={() => cancelBookingMutation.mutate(booking.id)}
+                        aria-label={`Cancelar reserva ${booking.commonArea?.name ?? booking.id}`}
+                      >
                         <DeleteIcon fontSize="small" />
                       </IconButton>
                     )}

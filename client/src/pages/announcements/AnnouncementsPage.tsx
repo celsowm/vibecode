@@ -50,7 +50,10 @@ export function AnnouncementsPage() {
               avatar={announcement.pinned ? <PushPinIcon color="primary" /> : undefined}
               action={
                 <RoleGuard roles={['ADMIN', 'SINDICO']}>
-                  <IconButton onClick={() => deleteMutation.mutate(announcement.id)}>
+                  <IconButton
+                    onClick={() => deleteMutation.mutate(announcement.id)}
+                    aria-label={`Excluir aviso ${announcement.title}`}
+                  >
                     <DeleteIcon fontSize="small" />
                   </IconButton>
                 </RoleGuard>

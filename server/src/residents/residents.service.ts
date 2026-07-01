@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateResidentDto } from './dto/create-resident.dto';
 import { UpdateResidentDto } from './dto/update-resident.dto';
@@ -17,10 +21,16 @@ export class ResidentsService {
       where: { userId_unitId: { userId: dto.userId, unitId: dto.unitId } },
     });
     if (existing) {
-      throw new ConflictException('Este morador já está vinculado a esta unidade');
+      throw new ConflictException(
+        'Este morador já está vinculado a esta unidade',
+      );
     }
     return this.prisma.resident.create({
-      data: { userId: dto.userId, unitId: dto.unitId, isOwner: dto.isOwner ?? false },
+      data: {
+        userId: dto.userId,
+        unitId: dto.unitId,
+        isOwner: dto.isOwner ?? false,
+      },
       include: RESIDENT_INCLUDE,
     });
   }

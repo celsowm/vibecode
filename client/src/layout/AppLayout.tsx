@@ -70,7 +70,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
       </List>
       <Divider />
       <List>
-        <ListItemButton onClick={logout}>
+        <ListItemButton onClick={logout} data-testid="logout-button">
           <ListItemIcon>
             <LogoutIcon />
           </ListItemIcon>
@@ -88,6 +88,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
             color="inherit"
             edge="start"
             onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Abrir menu"
             sx={{ mr: 2, display: { sm: 'none' } }}
           >
             <MenuIcon />

@@ -141,6 +141,7 @@ export function ChargesPage() {
                   {charge.status !== 'PAID' && charge.status !== 'CANCELED' && (
                     <IconButton
                       title="Registrar pagamento"
+                      aria-label={`Registrar pagamento ${charge.unit?.identifier ?? charge.id}`}
                       onClick={() => {
                         setPaymentTarget(charge.id);
                         setPaymentForm({ amountPaid: charge.amount, method: 'PIX' });

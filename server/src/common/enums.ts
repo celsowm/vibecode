@@ -25,11 +25,13 @@ export const MaintenanceStatus = {
   RESOLVED: 'RESOLVED',
   CLOSED: 'CLOSED',
 } as const;
-export type MaintenanceStatus = (typeof MaintenanceStatus)[keyof typeof MaintenanceStatus];
+export type MaintenanceStatus =
+  (typeof MaintenanceStatus)[keyof typeof MaintenanceStatus];
 
 export const MaintenancePriority = {
   LOW: 'LOW',
   MEDIUM: 'MEDIUM',
   HIGH: 'HIGH',
 } as const;
-export type MaintenancePriority = (typeof MaintenancePriority)[keyof typeof MaintenancePriority];
+export type MaintenancePriority =
+  (typeof MaintenancePriority)[keyof typeof MaintenancePriority];

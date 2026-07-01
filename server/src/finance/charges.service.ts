@@ -14,7 +14,9 @@ export class ChargesService {
   }
 
   findAllFees() {
-    return this.prisma.fee.findMany({ orderBy: [{ referenceYear: 'desc' }, { referenceMonth: 'desc' }] });
+    return this.prisma.fee.findMany({
+      orderBy: [{ referenceYear: 'desc' }, { referenceMonth: 'desc' }],
+    });
   }
 
   async generateChargesForFee(feeId: string) {
@@ -24,7 +26,11 @@ export class ChargesService {
     }
 
     const units = await this.prisma.unit.findMany({ select: { id: true } });
-    const dueDate = new Date(fee.referenceYear, fee.referenceMonth - 1, fee.dueDay);
+    const dueDate = new Date(
+      fee.referenceYear,
+      fee.referenceMonth - 1,
+      fee.dueDay,
+    );
 
     const created: string[] = [];
     for (const unit of units) {
@@ -45,10 +51,17 @@ export class ChargesService {
       created.push(unit.id);
     }
 
-    return { feeId: fee.id, unitsCharged: created.length, totalUnits: units.length };
+    return {
+      feeId: fee.id,
+      unitsCharged: created.length,
+      totalUnits: units.length,
+    };
   }
 
-  async findAll(user: AuthenticatedUser, filters: { status?: ChargeStatus; unitId?: string }) {
+  async findAll(
+    user: AuthenticatedUser,
+    filters: { status?: ChargeStatus; unitId?: string },
+  ) {
     const where: Record<string, unknown> = {};
     if (filters.status) where.status = filters.status;
     if (filters.unitId) where.unitId = filters.unitId;
@@ -93,7 +106,10 @@ export class ChargesService {
 
   async cancel(id: string) {
     await this.findOne(id);
-    return this.prisma.charge.update({ where: { id }, data: { status: ChargeStatus.CANCELED } });
+    return this.prisma.charge.update({
+      where: { id },
+      data: { status: ChargeStatus.CANCELED },
+    });
   }
 
   async delinquencyReport() {

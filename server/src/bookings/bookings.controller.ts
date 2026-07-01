@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import type { AuthenticatedUser } from '../common/types';
 import { BookingsService } from './bookings.service';
@@ -18,7 +26,10 @@ export class BookingsController {
   }
 
   @Post()
-  create(@Body() dto: CreateBookingDto, @CurrentUser() user: AuthenticatedUser) {
+  create(
+    @Body() dto: CreateBookingDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
     return this.bookingsService.create(dto, user);
   }
 

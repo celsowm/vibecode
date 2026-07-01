@@ -7,13 +7,20 @@
     "client"
   ],
   "scripts": {
+    "predev": "npm run lint",
     "dev": "concurrently -n SERVER,CLIENT -c blue,green \"npm run start:dev -w server\" \"npm run dev -w client\"",
+    "lint": "npm run lint -w server && npm run lint -w client",
+    "lint:ci": "npm run lint:ci -w server && npm run lint -w client",
+    "test": "npm run test:api && npm run test:playwright",
+    "test:api": "npm run test:e2e -w server -- --runInBand",
+    "test:playwright": "playwright test",
     "prisma:generate": "npm run prisma:generate -w server",
     "prisma:migrate": "npm run prisma:migrate -w server",
     "prisma:seed": "npm run prisma:seed -w server",
     "build": "npm run build -w server && npm run build -w client"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.1",
     "concurrently": "^9.1.0"
   }
 }

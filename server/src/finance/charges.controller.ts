@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
 import { ChargeStatus, Role } from '../common/enums';
@@ -38,7 +46,10 @@ export class ChargesController {
   }
 
   @Get('charges/:id')
-  findOneCharge(@Param('id') id: string, @CurrentUser() user: AuthenticatedUser) {
+  findOneCharge(
+    @Param('id') id: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
     return this.chargesService.findOne(id, user);
   }
 

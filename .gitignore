@@ -6,4 +6,10 @@ build/
 .DS_Store
 server/prisma/dev.db
 server/prisma/dev.db-journal
+server/prisma/*.sqlite
+server/prisma/*.sqlite-journal
 client/.env
+server/test/*.sqlite
+server/test/*.sqlite-journal
+test-results/
+playwright-report/

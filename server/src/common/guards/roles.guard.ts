@@ -1,4 +1,8 @@
-import { ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ExecutionContext,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../decorators/roles.decorator';
 import { Role } from '../enums';
@@ -17,8 +21,10 @@ export class RolesGuard {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest();
-    const user: AuthenticatedUser | undefined = request.user;
+    const request = context
+      .switchToHttp()
+      .getRequest<{ user?: AuthenticatedUser }>();
+    const user = request.user;
     if (!user || !requiredRoles.includes(user.role)) {
       throw new ForbiddenException('Acesso negado para este perfil de usuário');
     }

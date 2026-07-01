@@ -16,7 +16,10 @@ export class AuthService {
     if (!user || !user.isActive) {
       throw new UnauthorizedException('Credenciais inválidas');
     }
-    const passwordMatches = await bcrypt.compare(dto.password, user.passwordHash);
+    const passwordMatches = await bcrypt.compare(
+      dto.password,
+      user.passwordHash,
+    );
     if (!passwordMatches) {
       throw new UnauthorizedException('Credenciais inválidas');
     }

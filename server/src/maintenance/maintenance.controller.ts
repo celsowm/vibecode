@@ -13,7 +13,10 @@ export class MaintenanceController {
   constructor(private maintenanceService: MaintenanceService) {}
 
   @Post()
-  create(@Body() dto: CreateMaintenanceDto, @CurrentUser() user: AuthenticatedUser) {
+  create(
+    @Body() dto: CreateMaintenanceDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
     return this.maintenanceService.create(dto, user.userId);
   }
 
@@ -29,7 +32,10 @@ export class MaintenanceController {
 
   @Patch(':id/status')
   @Roles(Role.ADMIN, Role.SINDICO)
-  updateStatus(@Param('id') id: string, @Body() dto: UpdateMaintenanceStatusDto) {
+  updateStatus(
+    @Param('id') id: string,
+    @Body() dto: UpdateMaintenanceStatusDto,
+  ) {
     return this.maintenanceService.updateStatus(id, dto.status);
   }
 

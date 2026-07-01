@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
 import { Role } from '../common/enums';
@@ -18,7 +26,10 @@ export class AnnouncementsController {
 
   @Post()
   @Roles(Role.ADMIN, Role.SINDICO)
-  create(@Body() dto: CreateAnnouncementDto, @CurrentUser() user: AuthenticatedUser) {
+  create(
+    @Body() dto: CreateAnnouncementDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
     return this.announcementsService.create(dto, user.userId);
   }
 

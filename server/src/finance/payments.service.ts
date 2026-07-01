@@ -26,7 +26,8 @@ export class PaymentsService {
     });
 
     const totalPaid =
-      charge.payments.reduce((sum, p) => sum + Number(p.amountPaid), 0) + Number(dto.amountPaid);
+      charge.payments.reduce((sum, p) => sum + Number(p.amountPaid), 0) +
+      Number(dto.amountPaid);
 
     if (totalPaid >= Number(charge.amount)) {
       await this.prisma.charge.update({
