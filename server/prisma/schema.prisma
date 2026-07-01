@@ -1,0 +1,169 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// SQLite não suporta enums nativos no Prisma; os valores válidos
+// (Role, ChargeStatus, BookingStatus, MaintenanceStatus, MaintenancePriority)
+// são definidos como union types em src/common/enums.ts e validados na camada de aplicação.
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   @default("MORADOR")
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  residentLinks      Resident[]
+  announcements      Announcement[]       @relation("AnnouncementAuthor")
+  bookingsCreated    Booking[]            @relation("BookingCreatedBy")
+  maintenanceOpened  MaintenanceRequest[] @relation("MaintenanceOpenedBy")
+  paymentsRegistered Payment[]            @relation("PaymentRegisteredBy")
+  maintenanceComments MaintenanceComment[] @relation("MaintenanceCommentAuthor")
+}
+
+model Unit {
+  id         String   @id @default(uuid())
+  identifier String
+  block      String?
+  number     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  residents Resident[]
+  charges   Charge[]
+
+  @@unique([block, number])
+}
+
+model Resident {
+  id        String    @id @default(uuid())
+  userId    String
+  unitId    String
+  isOwner   Boolean   @default(false)
+  startDate DateTime  @default(now())
+  endDate   DateTime?
+
+  user User @relation(fields: [userId], references: [id])
+  unit Unit @relation(fields: [unitId], references: [id])
+
+  @@unique([userId, unitId])
+}
+
+model Fee {
+  id             String   @id @default(uuid())
+  description    String
+  amount         Decimal
+  referenceMonth Int
+  referenceYear  Int
+  dueDay         Int
+  createdAt      DateTime @default(now())
+
+  charges Charge[]
+
+  @@unique([referenceMonth, referenceYear])
+}
+
+model Charge {
+  id        String       @id @default(uuid())
+  feeId     String
+  unitId    String
+  amount    Decimal
+  dueDate   DateTime
+  status    String   @default("PENDING")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  fee      Fee       @relation(fields: [feeId], references: [id])
+  unit     Unit      @relation(fields: [unitId], references: [id])
+  payments Payment[]
+
+  @@unique([feeId, unitId])
+  @@index([status])
+}
+
+model Payment {
+  id             String   @id @default(uuid())
+  chargeId       String
+  amountPaid     Decimal
+  paidAt         DateTime @default(now())
+  method         String?
+  registeredById String
+
+  charge       Charge @relation(fields: [chargeId], references: [id])
+  registeredBy User   @relation("PaymentRegisteredBy", fields: [registeredById], references: [id])
+}
+
+model CommonArea {
+  id          String  @id @default(uuid())
+  name        String
+  description String?
+  capacity    Int?
+  openTime    String
+  closeTime   String
+  isActive    Boolean @default(true)
+
+  bookings Booking[]
+}
+
+model Booking {
+  id           String        @id @default(uuid())
+  commonAreaId String
+  createdById  String
+  startsAt     DateTime
+  endsAt       DateTime
+  status       String   @default("CONFIRMED")
+  notes        String?
+  createdAt    DateTime @default(now())
+
+  commonArea CommonArea @relation(fields: [commonAreaId], references: [id])
+  createdBy  User       @relation("BookingCreatedBy", fields: [createdById], references: [id])
+
+  @@index([commonAreaId, startsAt, endsAt])
+}
+
+model Announcement {
+  id        String   @id @default(uuid())
+  title     String
+  body      String
+  authorId  String
+  pinned    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author User @relation("AnnouncementAuthor", fields: [authorId], references: [id])
+}
+
+model MaintenanceRequest {
+  id          String              @id @default(uuid())
+  title       String
+  description String
+  status      String   @default("OPEN")
+  priority    String   @default("MEDIUM")
+  openedById  String
+  unitId      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  resolvedAt  DateTime?
+
+  openedBy User                 @relation("MaintenanceOpenedBy", fields: [openedById], references: [id])
+  comments MaintenanceComment[]
+}
+
+model MaintenanceComment {
+  id        String   @id @default(uuid())
+  requestId String
+  authorId  String
+  message   String
+  createdAt DateTime @default(now())
+
+  request MaintenanceRequest @relation(fields: [requestId], references: [id])
+  author  User               @relation("MaintenanceCommentAuthor", fields: [authorId], references: [id])
+}
